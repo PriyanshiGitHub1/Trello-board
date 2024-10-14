@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState } from 'react';
+import './App.css';
 
 
 //Backlog component
@@ -164,8 +165,28 @@ function App() {
 
   return (
     <>
+    <div className="app-container">
+      <div className='backlog'>
+      <h2>Backlog</h2>
+      <Backlog setTodolist={setTodolist} todolist={todolist} setProgressList={setProgressList} progressList={progressList} />
+      </div>
+
+      <div className='Inprogress'>
+        <h2>In Progress</h2>
+        <InProgress progressList={progressList} setProgressList = {setProgressList} setDoneList= {setDoneList} doneList = {doneList}/>
+      </div>
+
+      <div className='done'>
+        <h2>Done</h2>
+        <Done doneList={doneList} setDoneList= {setDoneList}/>
+      </div>
+    </div>
+
+
+
+    {/* <div className="main-container">
       <div style={{ display: "flex" }}>
-        <div style={{ marginRight: 500 }}>
+        <div style={{ marginRight: 500, marginLeft: 250 }}>
           <h2>Backlog</h2>
           <Backlog setTodolist={setTodolist} todolist={todolist} setProgressList={setProgressList} progressList={progressList} />
         </div>
@@ -180,6 +201,7 @@ function App() {
           <Done doneList={doneList} setDoneList= {setDoneList}/>
         </div>
       </div>
+      </div> */}
     </>
   )
 }
