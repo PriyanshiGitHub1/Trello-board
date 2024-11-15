@@ -282,44 +282,6 @@ function Backlog({ setTodolist, todolist, setProgressList, progressList, doneLis
             }
             )
             }
-
-            {/* {todolist.map((todo, index) => {
-                return (
-                    <div className='backlog-and-dialog-box-container' key={todo.id} >
-                        <div className='backlog-list'>
-                            <div className='checkbox-with-todo-list'>
-                                <input type="checkbox" disabled = {checkedTodo.includes(todo)} onChange={(event) => handleCheckBacklog(event, todo.id)} />
-                                <div className='todo-task' title={todo.todos.length > 50 ? todo.todos : ""}>
-                                    {todo.todos.length > 50 ? todo.todos.slice(0, 51) + "..." : todo.todos}
-                                </div>
-                            </div>
-                            <div className='date-edit-delete-container'>
-                            {moment().format('MM/DD/YYYY')}
-                           <span>{todo.priority}</span>
-                                <div className='delete-edit-button'>
-                                    <span onClick={() => handleDelete(todo.id)} > <MdDelete style={{color: 'red', fontSize: "1.5em"}}/> </span>
-                                   {!checkedTodo.includes(todo) && <><span onClick={() => handleEdit(index)}> <FaRegEdit style={{color: 'blue', fontSize: "1.5em"}}/> </span><br /></>}
-                                </div>
-                            </div>
-                        </div>
-                        {editTask && currIndex === index ?
-                            <div className='dialog-box'>
-                                {editTask && currIndex === index ? <input type="text" defaultValue={todo.todos} onChange={(e) => setUpdatedTask(e.target.value)} style={{ height: "2.5vh" }} /> : " "}
-                                {editTask && currIndex === index ?
-                                    <button onClick={() => updateTask(todo.id)} 
-                                    style={{ marginTop: "5px",
-                                            backgroundColor: "green",
-                                            borderRadius: '10px',
-                                            border: 'none',
-                                            height: "2.5vh",
-                                            color: "white"
-                                    }}> Update </button> : " "}
-                            </div> : " "}
-                    </div>
-                )
-            }
-            )
-            } */}
         </div>
     )
 }

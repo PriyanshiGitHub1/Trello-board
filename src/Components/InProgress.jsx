@@ -101,23 +101,6 @@ function InProgress({ progressList, doneList, setDoneList, setProgressList, chec
 }
 )
 }
-
-
-        {/* {progressList.map((item, index) => {
-          return (
-            <div key={item.id} className='progress-list'>
-              <div className='checkbox-with-progress-list'>
-                <input type="checkbox" disabled = {checkedProgress.includes(item)} onClick={(event) => handleCheckProgress(event, item.id)} />
-                <div className='progress-task' title={item.todos.length > 50 ? item.todos : ""}>
-                  {item.todos.length > 50 ? item.todos.slice(0, 51).concat("...") : item.todos}
-                </div>
-              </div>
-              <span className='delete-button' onClick={() => handleDeleteProgress(item.id)}>
-                <MdDelete style={{color: 'red', fontSize: "1.5em"}}/>
-              </span>
-            </div>
-          )
-        })} */}
   
       </>
     )
