@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import moment from 'moment';
 import { FaRegEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
@@ -31,18 +31,17 @@ function Backlog({ setTodolist, todolist, setProgressList, progressList, doneLis
     }
 
     // On click, add the todo list with newly added items
-    function handleAdd() {
+    function handleAdd(e) {
         console.log("selectedValue======>", selectedValue);
         console.log("newly added", addTask);
         addTask.priority = selectedValue;
         setTodolist([...todolist, addTask]);
         console.log("todolist", todolist);
-        
-        const emptyTodo = {
+        /* const emptyTodo = {
             id: " ",
             todos: " ",
         }
-        setAddTask(emptyTodo);
+        setAddTask(emptyTodo); */
         setShowForm(!showForm);
     }
 
@@ -106,28 +105,37 @@ function Backlog({ setTodolist, todolist, setProgressList, progressList, doneLis
         <div>
             <button onClick={handleOpenForm} style={{height: "3vh", backgroundColor: "teal", borderRadius: '20px', color: 'white', border: 'none', padding: '0 10px 0 10px'}}> Add New Task</button>
             {showForm &&
-            <div className='form-data'>
-            <label htmlFor="Add your task">Add your task: </label>
-            <input value={addTask.todos}
+           
+            <div>
+                 <form className='form-data' onSubmit={(e) => handleAdd(e)}>
+                 <label htmlFor="Add your task">Add your task: </label>
+                    <input value={addTask.todos}
                     type="text"
                     id='Add your task'
-                    name="backlog"
+                    name="backlog" 
+                    required
                     placeholder='Add your task'
                     onChange={(e) => handleChange(e)}
                     style={{ height: "3vh",borderRadius: '7px', paddingLeft: '10px', marginBottom: '10px' }} />
+                    <br />
                     <label htmlFor="priority-select">Choose priority: </label>
                     <select id="priority-select"
+                        name = "priority-select"
+                        required
                         onChange={(e) =>  setSelectedValue(e.target.value)}
                         value={addTask.priority}
                         style={{ height: "3vh", borderRadius: '7px', paddingLeft: '10px', marginBottom: '10px' }}>
-
+                       
                         <option value="">Please choose an option</option>
                         <option value="Low">Low</option>
                         <option value="Medium">Medium</option>
                         <option value="High">High</option>
                     </select>
-                <button onClick={() => handleAdd()} style={{ marginLeft: "5px", height: "3vh", backgroundColor: "teal", borderRadius: '7px', color: 'white', border: 'none'}}>Add</button>
+                    <br />
+                <input type = "submit" value = "Add" style={{ marginLeft: "5px", height: "3vh", backgroundColor: "teal", borderRadius: '7px', color: 'white', border: 'none'}} />
+                </form>
             </div>}
+            
             
 
             {value === 0 && todolist.map((todo, index) => {
