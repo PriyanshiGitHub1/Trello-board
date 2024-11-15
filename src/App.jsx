@@ -1,207 +1,131 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import './App.css';
-
-
-//Backlog component
-function Backlog({ setTodolist, todolist, setProgressList, progressList }) {
-
-  const [addTask, setAddTask] = useState({});
-  const [editTask, setEditTask] = useState(false);
-  const [currIndex, setCurrIndex] = useState();
-  const [updatedTask, setUpdatedTask] = useState();
-
-  //Add a new task in the text field
-  function handleChange(e) {
-    const newTodo = {
-      id: Date.now(),
-      todos: e.target.value
-    }
-    setAddTask(newTodo);
-  }
-
-  // On click, update the todo list with newly added items
-  function handleAdd() {
-    console.log("newly added", addTask)
-    setTodolist([...todolist, addTask]);
-    console.log("todolist", todolist);
-    const emptyTodo = {
-      id: " ",
-      todos: " "
-    }
-    setAddTask(emptyTodo);
-  }
-
-  //  On click, delete the selected item from the todo list
-  function handleDelete(deleteTodo) {
-    console.log(deleteTodo);
-    const filteredTodo = todolist.filter((todo) => todo.id !== deleteTodo);
-    setTodolist(filteredTodo);
-    console.log("delete", filteredTodo);
-    console.log("todolist", todolist);
-  }
-
-  // When checked, send items to progress list
-  function handleCheckBacklog(event, checkedBacklog) {
-    console.log('event -> ',event.target.checked);
-    console.log('checkedbacklog::',checkedBacklog)
-    if (event.target.checked) {
-      const updateProgressList = todolist.filter((todo) => todo.id === checkedBacklog);
-      console.log("new progress item=========>", updateProgressList);
-      setProgressList(progressList.concat(updateProgressList));
-      console.log("progress list=========>", progressList);
-    }
-  }
-
-  //On click, edit the backlog task
-  function handleEdit(index) {
-    setEditTask(prev => !prev);
-    setCurrIndex(index);
-  }
-
-  //On click, update the backlog task
-  function updateTask(existingTodo) {
-    const editedTodo = todolist.map((todo) => {todo.id === existingTodo? todo.todos = updatedTask : " "});
-    setTodolist([...todolist]);
-    console.log("existing and updated todo list=====>", todolist);
-    setEditTask(prev => !prev);
-  }
+import Backlog from './Components/Backlog';
+import InProgress from './Components/InProgress';
+import Done from './Components/Done';
+import Graph from './Components/Graph';
+import img1 from './images/me.jpeg';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
 
 
 
-  return (
-    <div>
-      <input value={addTask.todos} type="text" name="backlog" placeholder='Add your task' onChange={(e) => handleChange(e)} />
-      <button onClick={() => handleAdd()}>Add</button>
-      {todolist.map((todo, index) => {
-        return (
-          <div key={index}>
-            <input type="checkbox" onClick={(event) => handleCheckBacklog(event, todo.id)} />
-            {todo.todos}
-            <button onClick={() => handleDelete(todo.id)}>Delete</button>
-            <button onClick={() => handleEdit(index)}>Edit</button><br />
-            {editTask && currIndex === index ? <input type="text" defaultValue = {todo.todos} onChange={(e) => setUpdatedTask(e.target.value)} /> : " "}
-            {editTask && currIndex === index ? <button onClick={() => updateTask(todo.id)}>Update</button> : " "}
-          </div>
-        )
-      }
-      )
-      }
-    </div>
-  )
-}
-
-//In progress component
-function InProgress({ progressList, doneList, setDoneList, setProgressList}) {
-
-console.log("progress list=======>", progressList);
-
-function handleCheckProgress(event, itemId) {
-  if(event.target.checked) {
-  const checkedItem = progressList.filter((item) => item.id === itemId);
-  console.log("checked item=======>", checkedItem);
-  setDoneList(doneList.concat(checkedItem));
-}
-}
-
-function handleDeleteProgress(itemId) {
-  console.log(itemId);
-    const deletedProgress = progressList.filter((todo) => todo.id !== itemId);
-    setProgressList(deletedProgress);
-    console.log("delete", deletedProgress);
-    console.log("todolist", progressList);
-}
-
-  return (
-    <>
-      {progressList.map((item, index) => {
-        return (
-          <div key={item.id}>
-            <input type="checkbox" onClick={(event) => handleCheckProgress(event, item.id)} />
-            {item.todos}
-            <button onClick={() => handleDeleteProgress(item.id)}>Delete</button>
-          </div>
-        )
-      })}
-
-    </>
-  )
-}
-
-
-//Done component
-
-function Done({ doneList , setDoneList}) {
-  console.log("done list=======>", doneList);
-
-function handleDeleteDone(itemId) {
-  console.log(itemId);
-  const deletedDone = doneList.filter((todo) => todo.id !== itemId);
-  setDoneList(deletedDone);
-  console.log("delete", deletedDone);
-  console.log("todolist", doneList);
-}
-
-
-  return (
-    <>
-    {doneList.map((item) => {
-      return (
-        <div>
-        {item.todos}
-        <button onClick={() => handleDeleteDone(item.id)}>Delete</button>
-        </div>
-      )})}
-    </>
-  )
-}
-
-
-//The main App component
 function App() {
-  const [todolist, setTodolist] = useState([]);
+
+ 
+
+  const [todolist, setTodolist] = useState([{
+    id: 1,
+    todos: "Play outdoor games with friends and classmates to strengthen muscles and immune system",
+    priority: 'Medium',
+  }]);
+
   const [progressList, setProgressList] = useState([]);
   const [doneList, setDoneList] = useState([]);
+  const [checkedTodo, setCheckedTodo] = useState([]);
+  const [checkedProgress, setCheckedProgress] = useState([]);
+  const [value, setValue] = useState(0);
 
+  const handleTabChange = (event, newValue) => {
+    setValue(newValue);
+  };
+ 
+ 
 
   return (
     <>
-    <div className="app-container">
-      <div className='backlog'>
-      <h2>Backlog</h2>
-      <Backlog setTodolist={setTodolist} todolist={todolist} setProgressList={setProgressList} progressList={progressList} />
-      </div>
+      <div className="app-container">
+        <div className='tabs-container'>
+            <Tabs value={value} onChange={handleTabChange} aria-label="basic tabs example">
+                  <Tab label="All" style={{color: 'brown', fontSize: '12px'}}/>
+                  <Tab label="Low" style={{color: 'green', fontSize: '12px'}}/>
+                  <Tab label="Medium" style={{color: 'blue', fontSize: '12px'}}/>
+                  <Tab label="High" style={{color: 'red', fontSize: '12px'}}/>
+                  </Tabs>
+        </div>
+        <div className='task-management-container'>
+          <div className='backlog'>
+            <h3>Backlog</h3>
+            <Backlog
+              todolist={todolist}
+              setTodolist={setTodolist}
+              progressList={progressList}
+              setProgressList={setProgressList}
+              doneList={doneList}
+              setDoneList={setDoneList}
+              checkedTodo = {checkedTodo}
+              setCheckedTodo = {setCheckedTodo}
+              checkedProgress = {checkedProgress}
+              setCheckedProgress = {setCheckedProgress}
+              value = {value}
+               />
+          </div>
 
-      <div className='Inprogress'>
-        <h2>In Progress</h2>
-        <InProgress progressList={progressList} setProgressList = {setProgressList} setDoneList= {setDoneList} doneList = {doneList}/>
-      </div>
+          <div>
+            <div className='Inprogress'>
+              <h3>In-Progress</h3>
+              <InProgress
+                progressList={progressList}
+                setProgressList={setProgressList}
+                doneList={doneList}
+                setDoneList={setDoneList}
+                checkedProgress = {checkedProgress}
+                setCheckedProgress = {setCheckedProgress}
+                value = {value}
+               />
+            </div>
+          </div>
 
-      <div className='done'>
-        <h2>Done</h2>
-        <Done doneList={doneList} setDoneList= {setDoneList}/>
-      </div>
-    </div>
-
-
-
-    {/* <div className="main-container">
-      <div style={{ display: "flex" }}>
-        <div style={{ marginRight: 500, marginLeft: 250 }}>
-          <h2>Backlog</h2>
-          <Backlog setTodolist={setTodolist} todolist={todolist} setProgressList={setProgressList} progressList={progressList} />
+          <div>
+            <div className='done'>
+              <h3>Done</h3>
+              <Done
+                doneList={doneList}
+                setDoneList={setDoneList}
+                value = {value}
+                />
+            </div>
+          </div>
         </div>
 
-        <div style={{ marginRight: 500 }}>
-          <h2>In Progress</h2>
-          <InProgress progressList={progressList} setProgressList = {setProgressList} setDoneList= {setDoneList} doneList = {doneList}/>
-        </div>
+          <div className='track-record-container'>
+            <div className='img-h3'>
+              <img src = {img1} alt = 'my picture'/>
+              <h3>Hello, Priyanshi</h3>
+            </div>
+            
+            <div className='total-pending-ongoing-completed'>
+              <div className='total-task'>
+                <h4>Total Task</h4>
+                <div style= {{color: 'brown', fontSize: '30px'}}>{todolist.length}</div>
+              </div>
 
-        <div>
-          <h2>Done</h2>
-          <Done doneList={doneList} setDoneList= {setDoneList}/>
-        </div>
+              <div className='pending'>
+                <h4>Pending</h4>
+                <div style= {{color: 'red', fontSize: '30px'}}>{todolist.length - checkedTodo.length}</div>
+              </div>
+
+              <div className='ongoing'>
+                <h4>Ongoing</h4>
+                <div style= {{color: 'rgb(219, 73, 207)', fontSize: '30px'}}>{progressList.length - checkedProgress.length}</div>
+              </div>
+
+              <div className='completed'>
+                <h4>Completed</h4>
+                  <div style= {{color: 'green', fontSize: '30px'}}>{doneList.length}</div>
+
+              </div>
+            </div>
+
+            <div className='pi-chart'>
+                <Graph total = {todolist.length}
+                        pending={todolist.length - checkedTodo.length}
+                        ongoing={progressList.length - checkedProgress.length}
+                        completed={doneList.length}
+                        />
+            </div>
+          </div>
       </div>
-      </div> */}
     </>
   )
 }
